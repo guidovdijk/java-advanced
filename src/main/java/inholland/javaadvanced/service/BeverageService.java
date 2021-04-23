@@ -1,8 +1,11 @@
 package inholland.javaadvanced.service;
 
 import inholland.javaadvanced.model.Beverage;
+import inholland.javaadvanced.repository.IBeverageRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,30 +13,24 @@ import java.util.List;
 public class BeverageService {
     private List<Beverage> beverages;
 
+    @Autowired
+    private IBeverageRepository beverageRepo;
+
     public BeverageService() {
-        this.beverages = new ArrayList<>(
-                List.of(
-                        new Beverage(1, "Bacardi", 40.0, 42.50),
-                        new Beverage(2, "Wodka", 45.5, 21.00),
-                        new Beverage(3, "Captain Morgan", 34.0, 39.99)
-                )
-        );
+
     }
 
     public Beverage addBeverage(Beverage beverage){
-        beverages.add(beverage);
+        beverageRepo.save(beverage);
         return beverage;
     }
 
     public List<Beverage> getBeverages(){
-        return beverages;
+        return (List<Beverage>) beverageRepo.findAll();
     }
 
     public Beverage getBeverage(Integer id){
-        return beverages.stream()
-                .filter(b -> id.equals(b.getUuid()))
-                .findFirst()
-                .orElse(null);
+        return beverageRepo.findById(id).orElseThrow(EntityNotFoundException::new);
     }
 
     public Beverage updateBeverage(Integer id, String newName) {

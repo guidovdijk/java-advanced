@@ -30,8 +30,8 @@ public class BeverageController {
 
     @PostMapping(value = "", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Beverage> createBeverage(@RequestBody Beverage beverage) {
-        beverageService.addBeverage(beverage);
-        return new ResponseEntity<>(beverage, HttpStatus.CREATED);
+        Beverage newBeverage = beverageService.addBeverage(beverage);
+        return ResponseEntity.status(HttpStatus.CREATED).body(newBeverage);
     }
 
     @GetMapping(value = "/{id}")
