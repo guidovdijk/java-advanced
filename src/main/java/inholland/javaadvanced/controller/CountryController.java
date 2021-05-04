@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Controller
@@ -33,15 +34,13 @@ public class CountryController {
 
 	@GetMapping(value = "/{id}")
 	public ResponseEntity<Country> getCountry(@PathVariable Integer id) {
-		HttpStatus status = HttpStatus.OK;
+		try {
+			Country country =  countryService.getCountry(id);
 
-		Country country =  countryService.getCountry(id);
-
-		if (country == null) {
-			status = HttpStatus.NOT_FOUND;
+			return new ResponseEntity<>(country, HttpStatus.OK);
+		} catch (EntityNotFoundException e){
+			return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
 		}
-
-		return ResponseEntity.status(status).body(country);
 	}
 
 }

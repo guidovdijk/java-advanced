@@ -2,6 +2,7 @@ package inholland.javaadvanced.controller;
 
 import inholland.javaadvanced.model.Beverage;
 import inholland.javaadvanced.service.BeverageService;
+import javassist.NotFoundException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -9,6 +10,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.List;
 
 @Controller
@@ -36,14 +38,12 @@ public class BeverageController {
 
     @GetMapping(value = "/{id}")
     public ResponseEntity<Beverage> getBeverage(@PathVariable Integer id) {
-        HttpStatus status = HttpStatus.OK;
+        try {
+            Beverage beverage =  beverageService.getBeverage(id);
 
-        Beverage beverage =  beverageService.getBeverage(id);
-
-        if (beverage == null) {
-            status = HttpStatus.NOT_FOUND;
+            return new ResponseEntity<Beverage>(beverage, HttpStatus.OK);
+        } catch (EntityNotFoundException e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
         }
-
-        return ResponseEntity.status(status).body(beverage);
     }
 }
