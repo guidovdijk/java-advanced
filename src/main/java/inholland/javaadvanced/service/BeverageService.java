@@ -8,6 +8,8 @@ import org.springframework.stereotype.Service;
 import javax.persistence.EntityNotFoundException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 @Service
 public class BeverageService {
@@ -25,23 +27,25 @@ public class BeverageService {
         return beverage;
     }
 
+    // Get beverages that has a letter 'm' in it
+    public List<Beverage> findSpecificBeverages() {
+        return (List<Beverage>) beverageRepo.findSpecificBeverages();
+    }
+
+    // Get beverages that has a letter 'm' in it. Same functionality as 'findSpecificBeverages', but with lambda
+    public List<Beverage> findSpecificBeveragesHostCalculation(){
+        List<Beverage> beverages = (List<Beverage>) beverageRepo.findAll();
+
+        return beverages.stream()
+          .filter(b -> b.getName().contains("i"))
+          .collect(Collectors.toList());
+    }
+
     public List<Beverage> getBeverages(){
         return (List<Beverage>) beverageRepo.findAll();
     }
 
     public Beverage getBeverage(Integer id){
         return beverageRepo.findById(id).orElseThrow(EntityNotFoundException::new);
-    }
-
-    public Beverage updateBeverage(Integer id, String newName) {
-        Beverage beverage = getBeverage(id);
-
-        beverage.setName(newName);
-
-        return beverage;
-    }
-
-    public boolean deleteBeverage(Integer id) {
-        return beverages.removeIf(b -> b.getUuid().equals(id));
     }
 }

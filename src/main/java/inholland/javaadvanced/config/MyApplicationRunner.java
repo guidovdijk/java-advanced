@@ -46,11 +46,11 @@ public class MyApplicationRunner implements ApplicationRunner {
 		Beverage morgan = new Beverage(3, "Captain Morgan", 34.0, 39.99, country2);
 
 		List<Beverage> beverages = new ArrayList<>(
-						List.of(
-										bacardi,
-										wodka,
-										morgan
-						)
+			List.of(
+				bacardi,
+				wodka,
+				morgan
+			)
 		);
 
 		beverages.forEach(this.IbeverageRepository::save);
